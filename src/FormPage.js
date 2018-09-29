@@ -1,11 +1,7 @@
 import React, { Component } from "react";
 import DisplayDetails from "./DisplayDetails";
-import Loader  from './Loader';
+import axios from "axios";
 
-import PropTypes from "prop-types";
-import classNames from "classnames";
-import { withStyles } from "@material-ui/core/styles";
-import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 
@@ -21,17 +17,60 @@ class FormPage extends Component {
           website: "www.abc.com"
         }
       ],
-      showComponent: false 
+      UserName: "",
+      Email: "",
+      Contact: "",
+      Website: "",
+      showComponent: false,
+      error: false
     };
   }
 
   onSend = () => {
-    console.log("send");
-    this.setState({
-      showComponent: true
-    });
+    const post = {
+      name: this.state.UserName,
+      email: this.state.Email,
+      website: this.state.Website
+    };
 
+    axios
+      .post("https://jsonplaceholder.typicode.com/posts", post)
+      .then(response => {
+        console.log(response);
+      })
+      .catch(error => {
+        this.setState({
+          error: true
+        });
+      });
+    console.log("send");
+    // this.setState({
+    //   showComponent: true
+    // });
   };
+  handleNameInput = e => {
+    this.setState({
+      UserName: e.target.value
+    });
+  };
+
+  handleEmail = e => {
+    this.setState({
+      Email: e.target.value
+    });
+  };
+
+  handleContact = e => {
+    this.setState({
+      Contact: e.target.value
+    });
+  };
+  handleWebsite = e => {
+    this.setState({
+      Website: e.target.value
+    });
+  };
+
   render() {
     return (
       <div style={{ display: "flex", flexDirection: "column" }}>
@@ -41,6 +80,8 @@ class FormPage extends Component {
             label="Enter your name"
             margin="dense"
             variant="outlined"
+            onChange={this.handleNameInput}
+            value={this.state.UserName}
           />
         </div>
         <div>
@@ -52,6 +93,8 @@ class FormPage extends Component {
             autoComplete="email"
             margin="normal"
             variant="outlined"
+            onChange={this.handleEmail}
+            value={this.state.Email}
           />
         </div>
         <div>
@@ -60,6 +103,8 @@ class FormPage extends Component {
             label="Enter your 10 digit Number"
             margin="dense"
             variant="outlined"
+            onChange={this.handleContact}
+            value={this.state.Contact}
           />
         </div>
         <div>
@@ -71,6 +116,8 @@ class FormPage extends Component {
             autoComplete="email"
             margin="normal"
             variant="outlined"
+            onChange={this.handleWebsite}
+            value={this.state.Website}
           />
         </div>
         <div>
@@ -84,8 +131,14 @@ class FormPage extends Component {
           </Button>
         </div>
         {this.state.showComponent ? (
-          <DisplayDetails Details={this.state.UserDetails} />
+          <DisplayDetails
+            UserName={this.state.UserName}
+            Email={this.state.Email}
+            Contact={this.state.Contact}
+            Website={this.state.Website}
+          />
         ) : null}
+        {this.state.error ? <p  >OOPs..!! :( No internet connection</p> : null}
       </div>
     );
   }

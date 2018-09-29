@@ -1,17 +1,12 @@
 import React, { Component } from "react";
 
-import PropTypes from "prop-types";
-import { withStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
-import Divider from "@material-ui/core/Divider";
 
 class DisplayDetails extends Component {
   constructor(props) {
     super(props);
-    console.log(props);
-
     this.state = {
       Details: []
     };
@@ -20,19 +15,15 @@ class DisplayDetails extends Component {
   render() {
     return (
       <div>
-        {this.props.Details.map((details, index) => {
-          let data = Object.keys(details);
-          return data.map((data, index) => {
-            return (
-              <List >
-                <ListItem button>
-                  <ListItemText primary={`${data}:`} />
-                  <ListItemText primary={details[data]} />
-                </ListItem>
-              </List>
-            );
-            // <p key={index}>{details[data]}</p>
-          });
+        {Object.keys(this.props).map((data, index) => {
+          return (
+            <List key={index}>
+              <ListItem button>
+                <ListItemText primary={`${data}:`} />
+                <ListItemText primary={this.props[data]} />
+              </ListItem>
+            </List>
+          );
         })}
       </div>
     );
