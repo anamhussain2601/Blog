@@ -1,8 +1,5 @@
 import React, { Component } from "react";
-
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
+import { Image, List, Header } from 'semantic-ui-react'
 
 class DisplayDetails extends Component {
   constructor(props) {
@@ -13,19 +10,24 @@ class DisplayDetails extends Component {
   }
 
   render() {
+    console.log(this.props.responseReturn)
+    let {name , email, website, phone} =this.props.responseReturn;
     return (
-      <div>
-        {Object.keys(this.props).map((data, index) => {
-          return (
-            <List key={index}>
-              <ListItem button>
-                <ListItemText primary={`${data}:`} />
-                <ListItemText primary={this.props[data]} />
-              </ListItem>
-            </List>
-          );
-        })}
-      </div>
+    <List>
+      <Header as='h2'>{name}</Header> 
+      <List.Item>
+        <List.Icon name='mail' />
+        <List.Content>{email}</List.Content>
+      </List.Item>
+      <List.Item>
+        <List.Icon name='phone' />
+        <List.Content>{phone}</List.Content>
+      </List.Item>
+      <List.Item>
+        <List.Icon name='linkify' />
+        <List.Content>{website}</List.Content>
+      </List.Item>
+    </List>
     );
   }
 }
