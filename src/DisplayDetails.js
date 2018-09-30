@@ -10,7 +10,6 @@ class DisplayDetails extends Component {
   }
 
   render() {
-    console.log(this.props.responseReturn)
     let {name , email, website, phone} =this.props.responseReturn;
     return (
     <List>

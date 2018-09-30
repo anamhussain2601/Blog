@@ -1,13 +1,7 @@
 import React, { Component } from "react";
-import { List, AutoSizer } from "react-virtualized";
-import { Card } from 'semantic-ui-react';
-import InfiniteScroll from "react-infinite-scroll-component"
-import {Divider} from '@material-ui/core'
-
-const listHeight = 600;
-const rowHeight = 5;
-const rowWidth = 800;
-
+import { Card, Image } from 'semantic-ui-react';
+import './App.css';
+import InfiniteScroll from "react-infinite-scroll-component";
 
 class Post extends Component {
   constructor(props) {
@@ -17,7 +11,7 @@ class Post extends Component {
       post_new:[],
       show:false,
       hasMore: true,
-      head : 21,
+      head : 2,
     };
   }
 
@@ -36,11 +30,18 @@ class Post extends Component {
   }
 
   fetchMoreData =() =>{
-    console.log(this.state.head);
       this.setState({
         post_new: [...this.state.post_new,...this.state.post.slice(this.state.head, this.state.head+20)],
         head:this.state.head+20,
       })
+  }
+
+  getShortTitle = (title)=>{
+    if(title.length>15){
+      return title.substring(0,15)+"...";
+    }else{
+      return title;
+    }
   }
 
   render() {
@@ -53,13 +54,22 @@ class Post extends Component {
       endMessage={
         <p style={{ textAlign: "center" }}>
           <b>Yay! You have seen it all</b>
-        </p>}>
-        {
+        </p>
+      }>  
+       <Card.Group className="media" itemsPerRow={3}>{
           this.state.post_new.map((post, index)=>{
-            return <div key={index}>{post.text}</div>
+            return (
+              <Card key={index}>
+              <Image src={post.thumbnailUrl} />
+              <Card.Content>
+                <Card.Header>{this.getShortTitle(post.title)}</Card.Header>
+                <Card.Description>{post.title}</Card.Description>
+              </Card.Content>
+            </Card>
+            )
           })
-        }
-    </InfiniteScroll>
+       }</Card.Group>
+      </InfiniteScroll>
     );
   }
 }

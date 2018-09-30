@@ -8,8 +8,8 @@ class App extends Component {
   
   render() {
     return (
-      <div>
-        <div style={{display:'flex', flexDirection:'row', justifyContent:'space-between'}}>
+      <div style={{marginLeft:'20px', marginRight:'20px'}}>
+        <div style={{display:'flex', flexDirection:'row', justifyContent:'space-between', marginTop:"20px"}}>
           <h3>A Big O1' Blog</h3>
           <Link to="/user">Create Post</Link>
         </div>

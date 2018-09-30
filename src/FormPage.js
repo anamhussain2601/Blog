@@ -49,7 +49,6 @@ class FormPage extends Component {
   }
 
   validateFields = data => {
-    console.log(data);
     let { name, email, phone, website } = data;
     if (!name) {
       this.setState({ isValidName: true });
@@ -73,7 +72,6 @@ class FormPage extends Component {
       website: this.state.Website
     };
     this.validateFields(post);
-    console.log(this.state.isValidEmail);
     !this.state.isValidEmail &&
       !this.state.isValidName &&
       !this.state.isValidPhone &&
@@ -117,9 +115,8 @@ class FormPage extends Component {
   };
 
   render() {
-    console.log(this.state.isValidName);
     return (
-      <div>
+      <div >
         {this.state.showComponent ? (
           <DisplayDetails responseReturn={this.state.responseReturn} />
         ) : (

@@ -47,3 +47,21 @@
 .content {
   padding: 10px;
 }
+.media{
+  display: flex;
+  flex-wrap: wrap;
+}
+@media (max-width:768px){
+  .ui.three.cards.media .card{
+    width: calc(50% - 2em);
+    margin-left: 1em;
+    margin-right: 1em;
+}
+}
+@media (max-width:768px){
+  .ui.three.cards.media .card{
+    width: calc(100% - 2em);
+    margin-left: 1em;
+    margin-right: 1em;
+}
+}
