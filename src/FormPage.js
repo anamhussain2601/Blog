@@ -2,119 +2,58 @@ import React, { Component } from "react";
 import DisplayDetails from "./DisplayDetails";
 import axios from "axios";
 import { Form, Button } from "semantic-ui-react";
-
-const validateEmail = email => {
-  if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
-    return true;
-  } else {
-    return false;
-  }
-};
-
-const validatePhone = phone => {
-  var phoneno = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
-  if (phone.match(phoneno)) {
-    return true;
-  } else {
-    return false;
-  }
-};
-
-const validateWebsite = website => {
-  var res = website.match(
-    /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g
-  );
-  if (res == null) return false;
-  else return true;
-};
+import {validateFields, submitButtonStatus} from './utils';
 
 class FormPage extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      UserName: "",
-      Email: "",
-      Contact: "",
-      Website: "",
+      userData:{
+        name:'',
+        email:'',
+        phone:'',
+        website:''
+      },
+      validation:{
+        name:true,
+        email:true,
+        phone:true,
+        website:true
+      },
       showComponent: false,
-      error: false,
       responseReturn: {},
-      //validation flags
-      isValidName: false,
-      isValidEmail: false,
-      isValidPhone: false,
-      isValidWebSite: false
+      buttonStatus:false
     };
   }
 
-  validateFields = data => {
-    let { name, email, phone, website } = data;
-    if (!name) {
-      this.setState({ isValidName: true });
-    }
-    email
-      ? this.setState({ isValidEmail: !validateEmail(email) })
-      : this.setState({ isValidEmail: true });
-    phone
-      ? this.setState({ isValidPhone: !validatePhone(phone) })
-      : this.setState({ isValidPhone: true });
-    website
-      ? this.setState({ isValidWebSite: !validateWebsite(website) })
-      : this.setState({ isValidWebSite: true });
-  };
-
-  onSend = () => {
-    const post = {
-      name: this.state.UserName,
-      email: this.state.Email,
-      phone: this.state.Contact,
-      website: this.state.Website
-    };
-    this.validateFields(post);
-    !this.state.isValidEmail &&
-      !this.state.isValidName &&
-      !this.state.isValidPhone &&
-      !this.state.isValidWebSite &&
-      axios
-        .post("https://jsonplaceholder.typicode.com/posts", post)
-        .then(response => {
-          this.setState({
-            responseReturn: response.data,
-            showComponent: true
-          });
-        })
-        .catch(error => {
-          this.setState({
-            error: true
-          });
-        });
-  };
-
-  handleNameInput = e => {
-    this.setState({
-      UserName: e.target.value
+  onSubmit = () => {
+    axios
+    .post("https://jsonplaceholder.typicode.com/posts", this.state.userData)
+    .then(response => {
+      this.setState({
+        responseReturn: response.data,
+        showComponent: true
+      });
+    })
+    .catch(error => {
+      console.log(error);
     });
   };
 
-  handleEmail = e => {
-    this.setState({
-      Email: e.target.value
-    });
-  };
+  onValueCahnge =(e,fieldName) =>{
+    let userData= this.state.userData;
+    userData[fieldName]=e.target.value;
+    this.setState({userData:userData});
+    let validation = this.state.validation;
+    validation[fieldName] = validateFields(userData, fieldName);
+    this.setState({validation:validation});
+    this.setState({buttonStatus:submitButtonStatus(this.state.userData, this.state.validation)})
 
-  handleContact = e => {
-    this.setState({
-      Contact: e.target.value
-    });
-  };
-  handleWebsite = e => {
-    this.setState({
-      Website: e.target.value
-    });
-  };
+  }
 
   render() {
+
     return (
       <div >
         {this.state.showComponent ? (
@@ -125,35 +64,35 @@ class FormPage extends Component {
               fluid
               label="Name"
               placeholder="Name"
-              error={this.state.isValidName}
-              onChange={this.handleNameInput}
-              value={this.state.UserName}
+              error={!this.state.validation['name']}
+              onChange={(e)=>{this.onValueCahnge(e,'name')}}
+              value={this.state.userData['name']}
             />
             <Form.Input
               fluid
               label="Email"
               placeholder="Email"
-              error={this.state.isValidEmail}
-              onChange={this.handleEmail}
-              value={this.state.Email}
+              error={!this.state.validation['email']}
+              onChange={(e)=>{this.onValueCahnge(e,'email')}}
+              value={this.state.userData['email']}
             />
             <Form.Input
               fluid
               label="Phone"
               placeholder="Phone"
-              error={this.state.isValidPhone}
-              onChange={this.handleContact}
-              value={this.state.Contact}
+              error={!this.state.validation['phone']}
+              onChange={(e)=>{this.onValueCahnge(e,'phone')}}
+              value={this.state.userData['phone']}
             />
             <Form.Input
               fluid
               label="Webiste"
               placeholder="Website"
-              error={this.state.isValidWebSite}
-              onChange={this.handleWebsite}
-              value={this.state.Website}
+              error={!this.state.validation['website']}
+              onChange={(e)=>{this.onValueCahnge(e,'website')}}
+              value={this.state.userData['website']}
             />
-            <Button type="submit" onClick={this.onSend}>
+            <Button type="submit" onClick={this.onSubmit} disabled={!this.state.buttonStatus}>
               Send
             </Button>
           </Form>
